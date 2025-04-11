@@ -2,6 +2,7 @@
 #define _HACKS_H_
 
 #include "sys/time.h"
+#include "app/malloc.h"
 #include <stdarg.h>
 
 /* Why does this file exist?  We are building libsodium into an
@@ -19,6 +20,8 @@
 int dummy_errno = 0;
 
 BAD_CALL( abort )
+// BAD_CALL( fstat )
+int fstat(int __fd, struct stat *__buf) {EAPP_RETURN(EAPP_ERR_RET); return 0;};
 BAD_CALL( __assert_fail )
 BAD_CALL( close )
 //BAD_CALL( __errno_location ) We actually interpose on this, see below
@@ -52,6 +55,8 @@ unsigned char* entropy_bytes;
 void magic_random_init(){
   ocall_print_buffer("NOT USING REAL RANDOMNESS: TEST ONLY\n");
   entropy_bytes = (unsigned char*)malloc(512);
+  unsigned char malloc_bytes[512] = {0};
+//  entropy_bytes = (unsigned char*)malloc_bytes;
   if(!entropy_bytes){
     EAPP_RETURN(EAPP_ERR_RET);
   }
@@ -68,10 +73,11 @@ int getpid(){
 }
 
 /* TODO give a better timeofday */
-int gettimeofday(struct timeval *tv, struct timezone *tz){
+// int gettimeofday(struct timeval *tv, struct timezone *tz){
+int gettimeofday(struct timeval *tv, void *tz){
   /* We will just return cycle count for now */
   unsigned long cycles;
-  asm volatile ("rdcycle %0" : "=r" (cycles));
+  asm volatile ("rdtime %0" : "=r" (cycles));
 
   tv->tv_sec = cycles;
   tv->tv_sec = cycles;
@@ -121,3 +127,4 @@ long syscall(long number, ...){
 }
 
 #endif /* _HACKS_H_ */
+

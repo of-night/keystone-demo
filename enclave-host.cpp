@@ -34,9 +34,16 @@ void send_buffer(byte* buffer, size_t len){
 byte* recv_buffer(size_t* len){
   read(fd_clientsock, local_buffer, sizeof(size_t));
   size_t reply_size = *(size_t*)local_buffer;
+  printf("[EH] recv_size %d\n", reply_size);
   byte* reply = (byte*)malloc(reply_size);
   read(fd_clientsock, reply, reply_size);
   *len = reply_size;
+  printf("recv data: \n");
+  for (size_t i = 0; i < reply_size; i++)
+  {
+    printf("%d", reply[i]);
+  }
+  printf("\n");
   return reply;
 }
 
@@ -144,15 +151,21 @@ int main(int argc, char** argv)
   Keystone::Enclave enclave;
   Keystone::Params params;
 
-  if(enclave.init(enc_path, runtime_path, params) != Keystone::Error::Success){
+  params.setFreeMemSize(512 * 1024 * 1024);
+  printf("[EH] PARAMS FREEMEMSIZE: %d\n", params.getFreeMemSize());
+
+  if(enclave.init(enc_path, runtime_path, "loader.bin", params) != Keystone::Error::Success){
     printf("HOST: Unable to start enclave\n");
     exit(-1);
   }
 
   edge_init(&enclave);
 
+  printf("[EH] ENCLAVE INIT DONE!\n");
+
   Keystone::Error rval = enclave.run();
   printf("rval: %i\n",rval);
 
   return 0;
 }
+

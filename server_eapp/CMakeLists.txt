@@ -13,4 +13,6 @@ target_link_libraries(server_eapp.eapp_riscv
   ${LIBSODIUM_DIR}/.libs/libsodium.a)
 
 set_target_properties(server_eapp.eapp_riscv
+#  PROPERTIES LINK_FLAGS "-static")
+#  PROPERTIES LINK_FLAGS "-static -T ${CMAKE_CURRENT_SOURCE_DIR}/app.lds")
   PROPERTIES LINK_FLAGS "-nostdlib -static -T ${CMAKE_CURRENT_SOURCE_DIR}/app.lds")

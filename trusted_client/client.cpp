@@ -96,13 +96,30 @@ int main(int argc, char *argv[])
   size_t pubkey_size;
   byte* pubkey = trusted_client_pubkey(&pubkey_size);
   send_buffer(pubkey, pubkey_size);
-  
+
+  // FILE *testfp = NULL;
+  // testfp = fopen("test.txt", "r");
+
+  for(int i =0; i < 200000000; i++) {
+	  i += 1;
+  }
+  if (fgets((char*)local_buffer, BUFFERLEN-1, stdin)) {
+    printf("fgets error\r\n");
+  }
+
+
   /* Send/recv messages */
   for(;;){
     printf("Either type message for remote word count, or q to quit\n> ");
 
     memset(local_buffer, 0, BUFFERLEN);
-    fgets((char*)local_buffer, BUFFERLEN-1, stdin);
+    memcpy(local_buffer, "i am yangxin HHHH 123", 22);
+    // if (fgets((char*)local_buffer, BUFFERLEN-1, (FILE *)testfp)) {
+    //   printf("fgets error\r\n");
+    // }
+    // if (fgets((char*)local_buffer)) {
+    //   printf("fgets error\r\n");
+    // }
     printf("\n");
 
     /* Handle quit */
@@ -112,6 +129,7 @@ int main(int argc, char *argv[])
       exit(0);
     }
     else{
+      printf("TC fgets test.txt file message %s\n", local_buffer);
       send_wc_message((char*)local_buffer);
       size_t reply_size;
       byte* reply = recv_buffer(&reply_size);

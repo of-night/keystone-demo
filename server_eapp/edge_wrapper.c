@@ -1,6 +1,6 @@
-#include "eapp_utils.h"
+#include "app/eapp_utils.h"
 #include "string.h"
-#include "syscall.h"
+#include "app/syscall.h"
 #include "edge_wrapper.h"
 #include "edge_defines.h"
 
@@ -46,3 +46,4 @@ void ocall_send_reply(unsigned char* data, size_t len){
   ocall(OCALL_SEND_REPLY, data, len, 0, 0);
   return;
 }
+

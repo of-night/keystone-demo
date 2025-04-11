@@ -17,6 +17,17 @@ void attest_and_establish_channel(){
 
 
   ocall_wait_for_client_pubkey(client_pk, crypto_kx_PUBLICKEYBYTES);
+  ocall_print_buffer("server_pk: ");
+  for (size_t i = 0; i < crypto_kx_PUBLICKEYBYTES; i++)
+  {
+    ocall_print_value(server_pk[i]);
+  }
+
+  ocall_print_buffer("client_pk: ");
+  for (size_t i = 0; i < crypto_kx_PUBLICKEYBYTES; i++)
+  {
+    ocall_print_value(client_pk[i]);
+  }
   channel_establish();
 }
 

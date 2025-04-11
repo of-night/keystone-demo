@@ -35,7 +35,8 @@ then
     exit 0
 fi
 
-if [[ ! $(command -v riscv64-unknown-linux-gnu-gcc) ]]
+# if [[ ! $(command -v riscv64-unknown-linux-gnu-gcc) ]]
+if [[ ! $(command -v riscv64-buildroot-linux-gnu-gcc) ]]
 then
     echo "No riscv64 gcc available. Make sure you've run \"source source.sh\" in the Keystone directory (or equivalent.)";
     exit 0
@@ -56,7 +57,7 @@ then
   git checkout 4917510626c55c1f199ef7383ae164cf96044aea
   patch -p1 < $DEMO_DIR/sodium_patches/configure.ac.patch
   ./autogen.sh
-  ./configure --host=riscv64-unknown-linux-gnu --disable-ssp --disable-asm --without-pthreads
+  ./configure --host=riscv64-buildroot-linux-gnu --disable-ssp --disable-asm --without-pthreads
   make
   cd ..
 fi
@@ -68,7 +69,7 @@ then
   git clone https://github.com/jedisct1/libsodium.git libsodium_client
   cd libsodium_client
   git checkout 4917510626c55c1f199ef7383ae164cf96044aea
-  ./configure --host=riscv64-unknown-linux-gnu --disable-ssp --disable-asm --without-pthreads
+  ./configure --host=riscv64-buildroot-linux-gnu --disable-ssp --disable-asm --without-pthreads
   make
   cd ..
 fi
@@ -91,3 +92,4 @@ make packagedemo
 echo -e "************ Demo binaries built and copied into overlay directory. ***************
             Run 'make image' in the Keystone build dir, and the demo binaries should
             be available in qemu next time you start it!"
+

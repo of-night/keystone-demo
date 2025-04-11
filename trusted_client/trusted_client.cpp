@@ -84,6 +84,21 @@ void trusted_client_get_report(void* buffer, int ignore_valid){
 
   printf("[TC] Session keys established\n");
   channel_ready = 1;
+
+  printf("server_pk: \n");
+  for (size_t i = 0; i < crypto_kx_PUBLICKEYBYTES; i++)
+  {
+    printf("%d", server_pk[i]);
+  }
+  printf("\n");
+
+  printf("client_pk: \n");
+  for (size_t i = 0; i < crypto_kx_PUBLICKEYBYTES; i++)
+  {
+    printf("%d", client_pk[i]);
+  }
+  printf("\n");
+
 }
 
 #define MSG_BLOCKSIZE 32

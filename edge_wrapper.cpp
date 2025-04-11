@@ -18,6 +18,8 @@ int edge_init(Keystone::Enclave* enclave){
 
   edge_call_init_internals((uintptr_t)enclave->getSharedBuffer(),
 			   enclave->getSharedBufferSize());
+
+  return 0;
 }
 
 void print_buffer_wrapper(void* buffer)
@@ -153,6 +155,12 @@ void wait_for_client_pubkey_wrapper(void* buffer){
 
   void* pubkey = wait_for_client_pubkey();
 
+  printf("recv pk data: \n");
+  for (size_t i = 0; i < crypto_kx_PUBLICKEYBYTES; i++)
+  {
+    printf("%d", *((unsigned char*)pubkey + i));
+  }
+  printf("\n");
 
   // We are done with the data section for args, use as return region
   // TODO safety check?
@@ -160,7 +168,15 @@ void wait_for_client_pubkey_wrapper(void* buffer){
 
   memcpy((void*)data_section, pubkey, crypto_kx_PUBLICKEYBYTES);
 
-  if( edge_call_setup_ret(edge_call, (void*) data_section, sizeof(unsigned long))){
+  printf("recv pk data data_section: \n");
+  for (size_t i = 0; i < crypto_kx_PUBLICKEYBYTES; i++)
+  {
+    printf("%d", *((unsigned char*)data_section + i));
+  }
+  printf("\n");
+
+//  if( edge_call_setup_ret(edge_call, (void*) data_section, sizeof(unsigned long))){
+if( edge_call_setup_ret(edge_call, (void*) data_section, crypto_kx_PUBLICKEYBYTES)){
     edge_call->return_data.call_status = CALL_STATUS_BAD_PTR;
   }
   else{
@@ -169,3 +185,4 @@ void wait_for_client_pubkey_wrapper(void* buffer){
 
   return;
 }
+
